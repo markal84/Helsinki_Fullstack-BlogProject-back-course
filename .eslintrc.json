@@ -5,15 +5,19 @@
     "prettier"
   ],
   "env": {
-    "browser": true,
     "commonjs": true,
-    "es6": true,
     "jest": true,
     "node": true
   },
   "rules": {
-    "jsx-a11y/href-no-hash": ["off"],
-    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
+    "eqeqeq": "error",
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "no-trailing-spaces": "error",
+    "object-curly-spacing": ["error", "always"],
+    "arrow-spacing": ["error", { "before": true, "after": true }],
+    "no-console": 0,
     "max-len": [
       "warn",
       {
