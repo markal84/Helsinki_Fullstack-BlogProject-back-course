@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const logger = require('./utilis/logger')
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,7 @@ const Blog = mongoose.model('Blog', blogSchema);
 const mongoUrl =
   'mongodb+srv://kalet1984:Uh9lp1MnTMZsNuDd@kodilla.enwks.mongodb.net/blogApp?retryWrites=true&w=majority';
 mongoose.connect(mongoUrl).then(() => {
-  console.log('connected to database');
+  logger.info('connected to database');
 });
 
 app.use(cors());
