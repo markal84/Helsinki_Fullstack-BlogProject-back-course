@@ -7,14 +7,17 @@ blogsRouter.get('/', (request, response) => {
   });
 });
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', (request, response, next) => {
   const blog = new Blog(request.body);
 
-  blog.save().then((newBlog) => {
-    response.status(201).json(newBlog);
-  });
+  blog
+    .save()
+    .then((newBlog) => {
+      response.status(201).json(newBlog);
+    })
+    .catch((error) => next(error));
 
-  console.log(request.body);
+  console.log('post created ', request.body);
 });
 
 module.exports = blogsRouter;
