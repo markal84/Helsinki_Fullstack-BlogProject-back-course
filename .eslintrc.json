@@ -1,21 +1,24 @@
 {
-  "extends": [
-    "airbnb",
-    "plugin:prettier/recommended",
-    "prettier"
-  ],
+  "extends": ["airbnb", "plugin:prettier/recommended", "prettier"],
   "env": {
     "commonjs": true,
     "jest": true,
     "node": true
   },
-  "import/no-extraneous-dependencies": ["error", {"devDependencies": false, "optionalDependencies": false, "peerDependencies": false}],
   "rules": {
     "eqeqeq": "error",
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "no-trailing-spaces": "error",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": false,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
     "object-curly-spacing": ["error", "always"],
     "arrow-spacing": ["error", { "before": true, "after": true }],
     "no-console": 0,
