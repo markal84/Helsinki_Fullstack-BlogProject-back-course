@@ -1,11 +1,10 @@
 const http = require('http');
 const express = require('express');
-
-const app = express();
-
+const mongoose = require('mongoose');
 const cors = require('cors');
 
-const mongoose = require('mongoose');
+const app = express();
+app.use(cors());
 
 mongoose.set('strictQuery', true);
 

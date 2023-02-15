@@ -9,6 +9,7 @@
     "jest": true,
     "node": true
   },
+  "import/no-extraneous-dependencies": ["error", {"devDependencies": false, "optionalDependencies": false, "peerDependencies": false}],
   "rules": {
     "eqeqeq": "error",
     "indent": ["error", 2],
