@@ -3,9 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('./utilis/logger')
+const config = require('./utilis/config')
 
 const app = express();
-app.use(cors());
 
 mongoose.set('strictQuery', true);
 
@@ -18,8 +18,7 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema);
 
-const mongoUrl =
-  'mongodb+srv://kalet1984:Uh9lp1MnTMZsNuDd@kodilla.enwks.mongodb.net/blogApp?retryWrites=true&w=majority';
+const mongoUrl = config.MONGODB_URI;
 mongoose.connect(mongoUrl).then(() => {
   logger.info('connected to database');
 });
@@ -41,7 +40,6 @@ app.post('/api/blogs', (request, response) => {
   });
 });
 
-const PORT = 3003;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`);
 });
