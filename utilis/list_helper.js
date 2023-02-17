@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const _ = require('lodash');
+
 const dummy = (blogs) => {
   return blogs;
 };
@@ -34,6 +37,16 @@ const mostBlogs = (blogs) => {
     };
     return author;
   }
+
+  const authorOcc = _.countBy(blogs, (name) => name.author);
+  const blogsNumber = Object.entries(authorOcc);
+
+  const result = {
+    author: blogsNumber[0][0],
+    blogs: blogsNumber[0][1]
+  };
+  console.log(result);
+  return result;
 };
 
 module.exports = {
