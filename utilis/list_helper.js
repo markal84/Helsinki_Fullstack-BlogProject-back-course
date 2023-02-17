@@ -22,8 +22,23 @@ const mostLikes = (blogs) => {
   return result;
 };
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return 'There is no blogs';
+  }
+
+  if (blogs.length === 1) {
+    const author = {
+      author: blogs[0].author,
+      blogs: 1
+    };
+    return author;
+  }
+};
+
 module.exports = {
   dummy,
   totalLikes,
-  mostLikes
+  mostLikes,
+  mostBlogs
 };

@@ -14,6 +14,6 @@ describe('Most likes', () => {
 
   test('of list with many blogs, equals to blog with the most likes', () => {
     const result = mostLikes(blogs);
-    expect(result).toEqual(blogs[1]);
+    expect(result).toEqual(blogs[2]);
   });
 });

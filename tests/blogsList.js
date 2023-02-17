@@ -15,6 +15,11 @@ const blogs = [
     likes: 2
   },
   {
+    title: 'Test tile',
+    author: 'Test author',
+    likes: 2
+  },
+  {
     title: 'Test tile2',
     author: 'Test author2',
     likes: 22
