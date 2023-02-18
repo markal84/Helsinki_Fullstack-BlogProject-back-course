@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "",
   "dependencies": {
@@ -15,7 +16,8 @@
     "express": "^4.18.2",
     "lodash": "^4.17.21",
     "mongoose": "^6.9.1",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
