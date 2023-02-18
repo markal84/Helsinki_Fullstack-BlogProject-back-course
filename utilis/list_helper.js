@@ -11,7 +11,7 @@ const totalLikes = (blogs) => {
     : blogs.map((prop) => prop.likes).reduce((prev, next) => prev + next);
 };
 
-const mostLikes = (blogs) => {
+const favoriteBlog = (blogs) => {
   if (blogs.length === 0) {
     return 'There is no blogs';
   }
@@ -52,6 +52,6 @@ const mostBlogs = (blogs) => {
 module.exports = {
   dummy,
   totalLikes,
-  mostLikes,
+  favoriteBlog,
   mostBlogs
 };
