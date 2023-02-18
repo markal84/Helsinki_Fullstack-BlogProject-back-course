@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const config = require('./utilis/config');
+const { MONGODB_URI } = require('./utilis/config');
 
 const app = express();
 const blogsRouter = require('./controllers/blogs');
@@ -13,7 +13,7 @@ mongoose.set('strictQuery', true);
 logger.info('connecting to database');
 
 mongoose
-  .connect(config.MONGODB_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     logger.info('connected to database');
   })
