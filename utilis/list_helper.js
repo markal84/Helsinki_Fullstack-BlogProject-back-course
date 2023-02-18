@@ -49,9 +49,46 @@ const mostBlogs = (blogs) => {
   return result;
 };
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return 'There is no blogs';
+  }
+
+  if (blogs.length === 1) {
+    const author = {
+      author: blogs[0].author,
+      likes: blogs[0].likes
+    };
+    return author;
+  }
+
+  // if author has more than one blog sum likes and return new list
+  const holder = {};
+  blogs.forEach((prop) => {
+    if (holder.hasOwnProperty(prop.author)) {
+      holder[prop.author] += prop.likes;
+    } else {
+      holder[prop.author] = prop.likes;
+    }
+  });
+
+  const result = [];
+  for (let prop in holder) {
+    result.push({ author: prop, likes: holder[prop] });
+  }
+
+  // console.log(result);
+
+  // sort list by likes
+  const sorted = _.orderBy(result, [(prop) => prop.likes], ['desc']);
+  // console.log('after sorting ', sorted);
+  return sorted[0];
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 };
