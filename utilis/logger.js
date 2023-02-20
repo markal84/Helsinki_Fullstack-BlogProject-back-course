@@ -18,4 +18,8 @@ const logger = createLogger({
   transports: [new transports.Console()]
 });
 
+if (process.env.NODE_ENV !== 'test') {
+  createLogger();
+}
+
 module.exports = logger;

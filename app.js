@@ -15,10 +15,14 @@ logger.info('connecting to database');
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    logger.info('connected to database');
+    if (process.env.NODE_ENV === 'test') {
+      logger.info('connected to test database');
+    } else {
+      logger.info('connected to database');
+    }
   })
   .catch((error) => {
-    logger.error('error connecting to database: ', error.message);
+    logger.error('error connecting to selected database: ', error.message);
   });
 
 app.use(cors());
