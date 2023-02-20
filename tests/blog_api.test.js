@@ -2,25 +2,11 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
+const { initialPosts, nonExistingId, postsInDb } = require('./test_helper');
 
 const api = supertest(app);
 
 const Post = require('../models/post');
-
-const initialPosts = [
-  {
-    title: 'Wiedzmin',
-    author: 'Andrzej Sapkowski',
-    url: 'http://sapkowski.pl',
-    likes: 2
-  },
-  {
-    title: 'Lord of the ring',
-    author: 'JJR Tolkien',
-    url: 'http://tolkien.pl',
-    likes: 6
-  }
-];
 
 beforeEach(async () => {
   await Post.deleteMany({});
@@ -37,7 +23,7 @@ test('posts are returned as json', async () => {
     .expect('Content-Type', /application\/json/);
 });
 
-test('there are two posts', async () => {
+test('all posts are returned', async () => {
   const res = await api.get('/api/blogs');
 
   expect(res.body).toHaveLength(initialPosts.length);
@@ -64,13 +50,11 @@ test('a valid post can be added', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/);
 
-  const res = await api.get('/api/blogs');
-  // console.log(res.body);
-  const { body } = res;
+  const postsAtEnd = await postsInDb();
 
-  const titles = body.map((t) => t.title);
+  expect(postsAtEnd).toHaveLength(initialPosts.length + 1);
 
-  expect(body).toHaveLength(initialPosts.length + 1);
+  const titles = postsAtEnd.map((t) => t.title);
   expect(titles).toContain('IT');
 });
 
@@ -82,9 +66,9 @@ test('note without title and author is not added', async () => {
 
   await api.post('/api/blogs').send(newPost).expect(400);
 
-  const response = await api.get('/api/blogs');
+  const postsAtEnd = await postsInDb();
 
-  expect(response.body).toHaveLength(initialPosts.length);
+  expect(postsAtEnd).toHaveLength(initialPosts.length);
 });
 
 afterAll(async () => {
