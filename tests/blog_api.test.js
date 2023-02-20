@@ -16,7 +16,7 @@ const initialPosts = [
   },
   {
     title: 'Lord of the ring',
-    author: 'JJR olkien',
+    author: 'JJR Tolkien',
     url: 'http://tolkien.pl',
     likes: 6
   }
@@ -48,6 +48,43 @@ test('a specific post has Wiedzmin as a title', async () => {
 
   const authors = res.body.map((post) => post.title);
   expect(authors).toContain('Wiedzmin');
+});
+
+test('a valid post can be added', async () => {
+  const newPost = {
+    title: 'IT',
+    author: 'Stephen King',
+    url: 'http://sking.pl',
+    likes: 11
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const res = await api.get('/api/blogs');
+  // console.log(res.body);
+  const { body } = res;
+
+  const titles = body.map((t) => t.title);
+
+  expect(body).toHaveLength(initialPosts.length + 1);
+  expect(titles).toContain('IT');
+});
+
+test('note without title and author is not added', async () => {
+  const newPost = {
+    url: 'http://sking.pl',
+    likes: 11
+  };
+
+  await api.post('/api/blogs').send(newPost).expect(400);
+
+  const response = await api.get('/api/blogs');
+
+  expect(response.body).toHaveLength(initialPosts.length);
 });
 
 afterAll(async () => {
