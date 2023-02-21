@@ -58,7 +58,7 @@ test('a valid post can be added', async () => {
   expect(titles).toContain('IT');
 });
 
-test('note without title and author is not added', async () => {
+test('post without title and / or author is not added', async () => {
   const newPost = {
     url: 'http://sking.pl',
     likes: 11
@@ -69,6 +69,39 @@ test('note without title and author is not added', async () => {
   const postsAtEnd = await postsInDb();
 
   expect(postsAtEnd).toHaveLength(initialPosts.length);
+});
+
+test('a specific post can be viewed', async () => {
+  const postsAtStart = await postsInDb();
+  const postToView = postsAtStart[0];
+
+  const resultPost = await api
+    .get(`/api/blogs/${postToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  expect(resultPost.body).toEqual(postToView);
+});
+
+test('a note can be deleted', async () => {
+  const postsAtStart = await postsInDb();
+  const postToDelete = postsAtStart[0];
+
+  await api.delete(`/api/blogs/${postToDelete.id}`).expect(204);
+
+  const postsAtEnd = await postsInDb();
+
+  /*
+  console.log('posts after delete', postsAtEnd);
+  console.log('postsAtEnd length after delete', postsAtEnd.length);
+  console.log('initialPost length', initialPosts.length);
+  console.log(`Expect ${postsAtEnd.length} to be ${initialPosts.length - 1}`);
+  */
+
+  expect(postsAtEnd).toHaveLength(initialPosts.length - 1);
+
+  const authors = postsAtEnd.map((a) => a.author);
+  expect(authors).not.toContain(postToDelete);
 });
 
 afterAll(async () => {
