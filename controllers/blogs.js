@@ -19,19 +19,16 @@ blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body);
 
   if (!blog.likes) {
-    console.log('there is no likes property');
+    // console.log('there is no likes property');
     /*
      const defaultBlog = { ...blog.toObject(), likes: 0 };
      - can't figure why it's not working on save()
      */
     blog.likes = 0;
-    // defaultBlog.likes = 0;
-    // console.log('blog is ', blog);
-    // console.log('default blog is now ', defaultBlog, defaultBlog.likes);
     const modifiedBlog = await blog.save();
     response.status(201).json(modifiedBlog);
   } else if (!blog.url || !blog.title) {
-    console.log('title or url address is missing');
+    // console.log('title or url address is missing');
     return response.status(400).end();
   } else {
     const newBlog = await blog.save();

@@ -99,6 +99,29 @@ test('post without likes defined will set default likes to 0', async () => {
   expect(postsAtEnd[2].likes).toEqual(0);
 });
 
+// task 4.12
+test('post withouth title or url wont be saved', async () => {
+  const newPosts = [
+    {
+      title: 'IT',
+      author: 'Stephen King',
+      likes: 6
+    },
+    {
+      author: 'Stephen King2',
+      url: 'https//king.com',
+      likes: 8
+    }
+  ];
+
+  await api.post('/api/blogs').send(newPosts[0]).expect(400);
+  await api.post('/api/blogs').send(newPosts[1]).expect(400);
+
+  const postsAtEnd = await postsInDb();
+
+  expect(postsAtEnd).toHaveLength(initialPosts.length);
+});
+
 test('a specific post can be viewed', async () => {
   const postsAtStart = await postsInDb();
   const postToView = postsAtStart[0];
