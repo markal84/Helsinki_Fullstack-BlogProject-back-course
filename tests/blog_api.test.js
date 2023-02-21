@@ -10,10 +10,10 @@ const Post = require('../models/post');
 
 beforeEach(async () => {
   await Post.deleteMany({});
-  let postObject = new Post(initialPosts[0]);
-  await postObject.save();
-  postObject = new Post(initialPosts[1]);
-  await postObject.save();
+
+  const postObj = initialPosts.map((post) => new Post(post));
+  const promiseArray = postObj.map((post) => post.save());
+  await Promise.all(promiseArray);
 });
 
 test('posts are returned as json', async () => {
@@ -36,6 +36,15 @@ test('a specific post has Wiedzmin as a title', async () => {
   expect(authors).toContain('Wiedzmin');
 });
 
+// test that id is present - task 4.9
+test('id property of post if defined and unique', async () => {
+  const ids = await postsInDb();
+  const id = ids.map((t) => t.id);
+
+  expect(id).toBeDefined();
+});
+
+// task 4.10
 test('a valid post can be added', async () => {
   const newPost = {
     title: 'IT',
@@ -69,6 +78,25 @@ test('post without title and / or author is not added', async () => {
   const postsAtEnd = await postsInDb();
 
   expect(postsAtEnd).toHaveLength(initialPosts.length);
+});
+
+// task 4.11
+test('post without likes defined will set default likes to 0', async () => {
+  const newPost = {
+    title: 'IT',
+    author: 'Stephen King',
+    url: 'http://sking.pl'
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const postsAtEnd = await postsInDb();
+  expect(postsAtEnd).toHaveLength(initialPosts.length + 1);
+  expect(postsAtEnd[2].likes).toEqual(0);
 });
 
 test('a specific post can be viewed', async () => {
