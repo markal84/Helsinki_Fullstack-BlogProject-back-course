@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const Blog = require('../models/post');
+const User = require('../models/users');
 
 const initialPosts = [
   {
@@ -31,6 +32,11 @@ const nonExistingId = async () => {
 const postsInDb = async () => {
   const posts = await Blog.find({});
   return posts.map((post) => post.toJSON());
+};
+
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users.map((u) => u.toJSON());
 };
 
 module.exports = {
