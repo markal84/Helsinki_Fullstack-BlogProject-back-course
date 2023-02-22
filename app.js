@@ -7,6 +7,7 @@ const { MONGODB_URI } = require('./utilis/config');
 
 const app = express();
 const blogsRouter = require('./controllers/blogs');
+const usersRouter = require('./controllers/users');
 const middleware = require('./utilis/middleware');
 const logger = require('./utilis/logger');
 
@@ -32,6 +33,7 @@ app.use(express.static('build'));
 app.use(express.json());
 
 app.use('/api/blogs', blogsRouter);
+app.use('/api/users', usersRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
