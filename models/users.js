@@ -1,9 +1,15 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
   name: String,
   passwordHash: String,
   posts: [
@@ -23,6 +29,8 @@ userSchema.set('toJSON', {
     delete returnedObject.passwordHash;
   }
 });
+
+userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model('User', userSchema);
 
