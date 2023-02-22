@@ -1,11 +1,13 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/post');
 
+// get blogs
 blogsRouter.get('/', async (request, response) => {
   const blogList = await Blog.find({});
   response.json(blogList);
 });
 
+// get blog
 blogsRouter.get('/:id', async (request, response) => {
   const post = await Blog.findById(request.params.id);
   if (post) {
@@ -15,6 +17,7 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 });
 
+// post
 blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body);
 
@@ -36,6 +39,25 @@ blogsRouter.post('/', async (request, response) => {
   }
 });
 
+// update - task 4.14
+blogsRouter.put('/:id', async (request, response) => {
+  const { body } = request;
+  const blog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  };
+  // console.log(blog);
+  if (blog) {
+    await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
+    response.status(200).json({ message: 'Update successful' });
+  } else {
+    response.status(404).end();
+  }
+});
+
+// delete - task 4.13
 blogsRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndRemove(request.params.id);
   response.status(204).end();
