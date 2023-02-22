@@ -167,13 +167,6 @@ describe('deletion of a post', () => {
 
     const postsAtEnd = await postsInDb();
 
-    /*
-    console.log('posts after delete', postsAtEnd);
-    console.log('postsAtEnd length after delete', postsAtEnd.length);
-    console.log('initialPost length', initialPosts.length);
-    console.log(`Expect ${postsAtEnd.length} to be ${initialPosts.length - 1}`);
-    */
-
     expect(postsAtEnd).toHaveLength(initialPosts.length - 1);
 
     const authors = postsAtEnd.map((a) => a.author);
