@@ -4,7 +4,10 @@ const User = require('../models/users');
 
 // get blogs
 blogsRouter.get('/', async (request, response) => {
-  const blogList = await Blog.find({});
+  const blogList = await Blog.find({}).populate('user', {
+    username: 1,
+    name: 1
+  });
   response.json(blogList);
 });
 
@@ -20,7 +23,7 @@ blogsRouter.get('/:id', async (request, response) => {
 
 // post
 blogsRouter.post('/', async (request, response) => {
-  const body = request.body;
+  const { body } = request;
   const user = await User.findById(body.userId);
 
   const blog = new Blog({
@@ -31,7 +34,6 @@ blogsRouter.post('/', async (request, response) => {
     user: user.id
   });
 
-  /*
   if (!blog.likes) {
     // console.log('there is no likes property');
     blog.likes = 0;
@@ -41,10 +43,9 @@ blogsRouter.post('/', async (request, response) => {
   } else {
     console.log('all okay');
   }
-  */
 
   const newBlog = await blog.save();
-  console.log(newBlog.id);
+  // eslint-disable-next-line no-underscore-dangle
   user.posts = user.posts.concat(newBlog._id);
   await user.save();
   response.status(201).json(newBlog);
