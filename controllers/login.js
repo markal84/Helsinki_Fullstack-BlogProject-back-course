@@ -9,7 +9,7 @@ loginRouter.post('/', async (req, res) => {
 
   const user = await User.findOne({ username });
   const isPasswordCorrect =
-    user === null ? false : bcrypt.compare(password, user.passwordHash);
+    user === null ? false : await bcrypt.compare(password, user.passwordHash);
 
   if (!(user && isPasswordCorrect)) {
     return res.status(401).json({
@@ -19,6 +19,7 @@ loginRouter.post('/', async (req, res) => {
 
   const userForToken = {
     username: user.username,
+    // eslint-disable-next-line no-underscore-dangle
     id: user._id
   };
 

@@ -48,7 +48,7 @@ blogsRouter.post('/', async (request, response) => {
   // eslint-disable-next-line no-underscore-dangle
   user.posts = user.posts.concat(newBlog._id);
   await user.save();
-  response.status(201).json(newBlog);
+  return response.status(201).json(newBlog);
 });
 
 // update - task 4.14
