@@ -6,10 +6,13 @@ const mongoose = require('mongoose');
 const { MONGODB_URI } = require('./utilis/config');
 
 const app = express();
+const middleware = require('./utilis/middleware');
+
+app.use(middleware.tokenExtractor);
+
 const blogsRouter = require('./controllers/blogs');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
-const middleware = require('./utilis/middleware');
 const logger = require('./utilis/logger');
 
 mongoose.set('strictQuery', true);

@@ -23,22 +23,12 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 });
 
-// authorization
-const getTokenFrom = (req) => {
-  const authorization = req.get('authorization');
-  // console.log(authorization);
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
-  return null;
-};
-
 // post
 blogsRouter.post('/', async (request, response) => {
   const { body } = request;
 
   // authorization and verification
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'invalid token' });
   }

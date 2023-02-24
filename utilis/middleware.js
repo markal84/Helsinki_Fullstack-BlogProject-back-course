@@ -1,17 +1,18 @@
 const logger = require('./logger');
 
-/*
-const requestLogger = (request, response, next) => {
-    logger.info('Method:', request.method)
-    logger.info('Path:  ', request.path)
-    logger.info('Body:  ', request.body)
-    logger.info('---')
-    next()
-  }
-*/
-
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
+};
+
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get('authorization');
+  // console.log(authorization);
+  if (authorization && authorization.startsWith('Bearer ')) {
+    // use substring method to remove first 7 chars from result string
+    req.token = authorization.substring(7);
+    // console.log('request token is', req.token);
+  }
+  return next();
 };
 
 // eslint-disable-next-line consistent-return
@@ -32,7 +33,7 @@ const errorHandler = (error, request, response, next) => {
 };
 
 module.exports = {
-  // requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor
 };
