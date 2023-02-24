@@ -25,9 +25,16 @@ usersRouter.post('/', async (req, res) => {
     passwordHash
   });
 
+  // task 4.16
+  if (password.length < 3) {
+    return res
+      .status(400)
+      .json({ error: 'password must be at least 3 characters long' });
+  }
+
   const savedUser = await user.save();
 
-  res.status(201).json(savedUser);
+  return res.status(201).json(savedUser);
 });
 
 usersRouter.delete('/:id', async (request, response) => {

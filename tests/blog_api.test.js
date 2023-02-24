@@ -233,6 +233,43 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
   });
+
+  // task 4.16
+  test('creation fails if username or password are less than 3 chars long', async () => {
+    const usersAtStart = await usersInDb();
+
+    const wrongUsers = [
+      {
+        username: 'no',
+        name: 'testname',
+        password: 'good'
+      },
+      {
+        username: 'good',
+        name: 'testname',
+        password: 'no'
+      }
+    ];
+
+    const wrongUsername = await api
+      .post('/api/users')
+      .send(wrongUsers[0])
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const wrongPassword = await api
+      .post('/api/users')
+      .send(wrongUsers[1])
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(wrongPassword.body.error).toContain(
+      'password must be at least 3 characters long'
+    );
+
+    const usersAtEnd = await usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
+  });
 });
 
 afterAll(async () => {
