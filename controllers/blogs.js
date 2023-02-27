@@ -1,8 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const blogsRouter = require('express').Router();
 const Blog = require('../models/post');
-const User = require('../models/users');
-const jwt = require('jsonwebtoken');
+const { userExtractor } = require('../utilis/middleware');
 
 // get blogs
 blogsRouter.get('/', async (request, response) => {
@@ -24,15 +23,10 @@ blogsRouter.get('/:id', async (request, response) => {
 });
 
 // post
-blogsRouter.post('/', async (request, response) => {
-  const { body } = request;
+blogsRouter.post('/', userExtractor, async (request, response) => {
+  const { body, user } = request;
 
-  // authorization and verification
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'invalid token' });
-  }
-  const user = await User.findById(decodedToken.id);
+  // authorization and verification moved to middleware
 
   const blog = new Blog({
     title: body.title,
@@ -43,13 +37,13 @@ blogsRouter.post('/', async (request, response) => {
   });
 
   if (!blog.likes) {
-    // console.log('there is no likes property');
+    console.log('setting likes to 0');
     blog.likes = 0;
   } else if (!blog.url || !blog.title) {
     // console.log('title or url address is missing');
     return response.status(400).end();
   } else {
-    console.log('all okay');
+    console.log('all data to create post is set');
   }
 
   const newBlog = await blog.save();
@@ -77,21 +71,10 @@ blogsRouter.put('/:id', async (request, response) => {
   }
 });
 
-// delete - task 4.13 - token expansion task 4.21
-blogsRouter.delete('/:id', async (request, response) => {
+// delete - task 4.13 - token expansion task 4.21 and 4.22
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+  const { user } = request;
   const blog = await Blog.findById(request.params.id);
-
-  // authorization and verification
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
-  if (!decodedToken.id) {
-    return response
-      .status(401)
-      .json({ error: 'invalid token, cant delete post' });
-  }
-
-  const user = await User.findById(decodedToken.id);
-  // console.log(`${blog.user.toString()} must equeal ${user.id.toString()} `);
 
   const isValidUser = blog.user.toString() === user.id.toString();
 

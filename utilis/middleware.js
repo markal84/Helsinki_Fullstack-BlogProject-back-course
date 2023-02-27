@@ -1,4 +1,6 @@
 const logger = require('./logger');
+const jwt = require('jsonwebtoken');
+const User = require('../models/users');
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
@@ -7,11 +9,27 @@ const unknownEndpoint = (request, response) => {
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization');
   // console.log(authorization);
-  if (authorization && authorization.startsWith('Bearer ')) {
+  if (authorization && authorization.toLowerCase().startsWith('Bearer ')) {
     // use substring method to remove first 7 chars from result string
     req.token = authorization.substring(7);
     // console.log('request token is', req.token);
   }
+  return next();
+};
+
+// task 4.22
+const userExtractor = async (req, res, next) => {
+  const token = req.get('authorization').substring(7);
+  // console.log('token is ', token);
+
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'invalid token' });
+  }
+  // console.log('decoded token is ', decodedToken);
+
+  req.user = await User.findById(decodedToken.id);
+
   return next();
 };
 
@@ -35,5 +53,6 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 };
