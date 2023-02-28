@@ -82,17 +82,26 @@ describe('viewing a specific post', () => {
 });
 
 describe('addition of a new post', () => {
-  // task 4.10
+  // task 4.10 and 4.23
   test('succeeds with valid data', async () => {
+    const users = await usersInDb();
+    const rootUser = users[0];
+    console.log(rootUser.id);
+
     const newPost = {
       title: 'IT',
       author: 'Stephen King',
       url: 'http://sking.pl',
-      likes: 11
+      likes: 11,
+      user: rootUser.id
     };
 
     await api
       .post('/api/blogs')
+      .set(
+        'Authorization',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJ0ZXN0IiwiaWQiOiI2M2Y3YTk0OTgxNWEyNDZiOWQ4ZjkyY2YiLCJpYXQiOjE2NzcxODE3NjJ9.-K8KaeQKvgqbpegWuLf4dKgYMf51CntQuSAdZ--x-wY'
+      )
       .send(newPost)
       .expect(201)
       .expect('Content-Type', /application\/json/);
